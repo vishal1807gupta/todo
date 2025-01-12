@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import cors from 'cors';
 import userRouter from './routes/userRouter.js';
-import notesRouter from './routes/notesRouter.js';
+import tasksRouter from './routes/tasksRouter.js';
 const app = express();
 const port = 5000;
 const MONGO_CONNECT = 'mongodb+srv://vishal1807gupta:IxG9lxtV8OkxwpAQ@cluster0.gjql6.mongodb.net/todo-list?retryWrites=true&w=majority&appName=Cluster0';
@@ -12,7 +12,7 @@ app.use(cors()); //Yes, you are correct! CORS (Cross-Origin Resource Sharing) is
 app.use(express.json());  // This was creating issue for sending request so before sending request add this line because The app.use(express.json()) middleware in Express is used to parse incoming JSON-formatted request bodies and make them available on the req.body object in your route handlers. (converts json data to javascript object)
 
 app.use('/users',userRouter);  // app.use() method in Express is used to register middleware functions in your application.
-app.use('/notes',notesRouter);
+app.use('/tasks',tasksRouter);
 
 app.get('/',(req,res)=>{
     res.send("Welcome to Vishal Club");

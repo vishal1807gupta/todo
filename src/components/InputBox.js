@@ -1,12 +1,11 @@
 import React from "react";
 import axios from "axios";
 
-const InputBox = ({setItems, oldItems, setOldItems, fetchItems}) =>{
+const InputBox = ({setItems, setOldItems, fetchItems}) =>{
 
     const handleSubmit = async()=>{
         let value = document.getElementById('task').value;
-        console.log(value);
-        await axios.post('http://localhost:5000/notes/addNote',{
+        await axios.post('http://localhost:5000/tasks/addtask',{
             'text' : value
         },{
             headers : {
@@ -19,7 +18,7 @@ const InputBox = ({setItems, oldItems, setOldItems, fetchItems}) =>{
 
     const handleSearch = async()=>{
         let value = document.getElementById('task').value.trim();
-        const response = await axios.post('http://localhost:5000/notes/searchNotes',{
+        const response = await axios.post('http://localhost:5000/tasks/searchtasks',{
             'searchText' : value
         },{
             headers : {
@@ -38,7 +37,6 @@ const InputBox = ({setItems, oldItems, setOldItems, fetchItems}) =>{
     const handleRetrieve = ()=>{
         let value = document.getElementById('task').value.trim();
         if(value.length===0)fetchItems();
-        setItems(oldItems);
     }
     
     return (

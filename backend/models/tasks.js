@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const notesSchema = mongoose.Schema(
+const tasksSchema = mongoose.Schema(
   {
     email: {
       type: String,
@@ -22,5 +22,5 @@ const notesSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const Notes = mongoose.model('notes', notesSchema);
-export default Notes;
+const tasks = mongoose.model('tasks', tasksSchema);
+export default tasks;

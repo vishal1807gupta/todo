@@ -11,7 +11,7 @@ const App = ()=>{
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleRemove = async(id)=>{
-    await axios.delete(`http://localhost:5000/notes/deleteNote/${id}`,
+    await axios.delete(`http://localhost:5000/tasks/deletetask/${id}`,
       {
         headers : {
         "Authorization" : 'Bearer ' + localStorage.getItem('token')
@@ -22,7 +22,7 @@ const App = ()=>{
   }
   
   const handleToggle = async(id)=>{
-    await axios.patch(`http://localhost:5000/notes/updateNotesTodo/${id}`,{},
+    await axios.patch(`http://localhost:5000/tasks/updatetasksTodo/${id}`,{},
       {
         headers: {
             'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -49,7 +49,7 @@ const App = ()=>{
         p.id = input.id;
         p.innerText = input.value;
         input.parentNode.replaceChild(p,input);
-        await axios.patch(`http://localhost:5000/notes/updateNotesText/${id}`,{
+        await axios.patch(`http://localhost:5000/tasks/updatetasksText/${id}`,{
             'text' : input.value
         },
           {
@@ -65,7 +65,7 @@ const App = ()=>{
   }
 
   const fetchItems = async()=>{
-    const response = await axios.get('http://localhost:5000/notes/getNotes',
+    const response = await axios.get('http://localhost:5000/tasks/gettasks',
         {
         headers: {
             'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -90,7 +90,7 @@ const App = ()=>{
 
   return (isLoggedIn)?(
     <>
-      <InputBox setItems={setItems} setOldItems={setOldItems} items={items} oldItems={oldItems} fetchItems={fetchItems}/>
+      <InputBox setItems={setItems} setOldItems={setOldItems} fetchItems={fetchItems}/>
       <TaskList items={items} handleRemove={handleRemove} handleToggle={handleToggle} handleUpdate={handleUpdate}/>
     </>
   ):(<LoginPage setIsLoggedIn={setIsLoggedIn}/>);
