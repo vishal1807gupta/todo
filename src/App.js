@@ -3,33 +3,50 @@ import axios from "axios";
 import TaskList from "./components/TaskList";
 import InputBox from "./components/InputBox";
 import LoginPage from "./components/LoginPage";
+import Download from "./components/Download";
 
 const App = ()=>{
 
   const [items,setItems] = useState([]);
   const [oldItems,setOldItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
+  const[user,setUser] = useState(null);
+
+  const handleTimer = (id)=>{
+      const time = document.getElementById('timer').value;
+      console.log(time);
+  }
 
   const handleRemove = async(id)=>{
-    await axios.delete(`http://localhost:5000/tasks/deletetask/${id}`,
-      {
-        headers : {
-        "Authorization" : 'Bearer ' + localStorage.getItem('token')
+    try{
+      await axios.delete(`http://localhost:5000/tasks/deletetask/${id}`,
+        {
+          headers : {
+          "Authorization" : 'Bearer ' + localStorage.getItem('token')
+        }
       }
+      );
+      fetchItems();
+  
+    }catch(err){
+      alert(err.response.data.message);
     }
-    );
-    fetchItems();
   }
   
   const handleToggle = async(id)=>{
-    await axios.patch(`http://localhost:5000/tasks/updatetasksTodo/${id}`,{},
-      {
-        headers: {
-            'Authorization' : 'Bearer ' + localStorage.getItem('token')
-        }
+    try{
+      await axios.patch(`http://localhost:5000/tasks/updatetasksTodo/${id}`,{},
+        {
+          headers: {
+              'Authorization' : 'Bearer ' + localStorage.getItem('token')
+          }
+      }
+      );
+      fetchItems();
+    }catch(err){
+      alert(err.response.data.message);
     }
-    );
-    fetchItems();
   }
 
   const handleUpdate = async(id)=>{
@@ -49,39 +66,66 @@ const App = ()=>{
         p.id = input.id;
         p.innerText = input.value;
         input.parentNode.replaceChild(p,input);
-        await axios.patch(`http://localhost:5000/tasks/updatetasksText/${id}`,{
-            'text' : input.value
-        },
-          {
-            headers: {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
-            }
+        try{
+          await axios.patch(`http://localhost:5000/tasks/updatetasksText/${id}`,{
+              'text' : input.value
+          },
+            {
+              headers: {
+                  'Authorization' : 'Bearer ' + localStorage.getItem('token')
+              }
+          }
+          );
+          fetchItems();
+        }catch(err){
+          alert(err.response.data.message);
         }
-        );
-        fetchItems();
     }
     setItems((items)=>items.map(item=>item.id===id?{...item,update:!item.update}:item));
     setOldItems((items)=>items.map(item=>item.id===id?{...item,update:!item.update}:item));
   }
 
   const fetchItems = async()=>{
-    const response = await axios.get('http://localhost:5000/tasks/gettasks',
+    try{
+      const response = await axios.get('http://localhost:5000/tasks/gettasks',
         {
         headers: {
             'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
         }
-    );
-    const arr = [];
-    for (let index = 0; index < response.data.result.length; index++) {
-        let task = {id : response.data.result[index]._id, value : response.data.result[index].text, stat:response.data.result[index].todo, update:false};
-        arr.push(task);
+      );
+      const arr = [];
+      for (let index = 0; index < response.data.result.length; index++) {
+          let task = {id : response.data.result[index]._id, value : response.data.result[index].text, stat:response.data.result[index].todo, update:false};
+          arr.push(task);
+      }
+      setItems(arr);
+      setOldItems(arr);
+    }catch(err){
+      alert(err.response.data.message);
     }
-    setItems(arr);
-    setOldItems(arr);
   }
+
+  const getUser = async()=>{
+      try{
+          const response = await axios.get('http://localhost:5000/users/getUser', {
+              headers: {
+                  'Authorization' : 'Bearer ' + localStorage.getItem('token')
+              }
+              }
+          );
+          setUser(response.data.result);
+      }catch(err){
+          alert(err.response.data.message);
+      }
+  }
+
   useEffect(()=>{
-    if(isLoggedIn)fetchItems();
+    if(isLoggedIn){
+      fetchItems();
+      getUser();
+    }
+      
   },[isLoggedIn]);
 
   useEffect(()=>{
@@ -91,9 +135,10 @@ const App = ()=>{
   return (isLoggedIn)?(
     <>
       <InputBox setItems={setItems} setOldItems={setOldItems} fetchItems={fetchItems}/>
-      <TaskList items={items} handleRemove={handleRemove} handleToggle={handleToggle} handleUpdate={handleUpdate}/>
+      <TaskList items={items} handleRemove={handleRemove} handleToggle={handleToggle} handleUpdate={handleUpdate} handleTimer={handleTimer}/>
+      <Download items={items} user={user}/>
     </>
-  ):(<LoginPage setIsLoggedIn={setIsLoggedIn}/>);
+  ):(<LoginPage setIsLoggedIn={setIsLoggedIn} isRegister={isRegister} setIsRegister={setIsRegister}/>);
 }
 
 export default App;

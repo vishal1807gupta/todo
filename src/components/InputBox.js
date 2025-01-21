@@ -4,34 +4,42 @@ import axios from "axios";
 const InputBox = ({setItems, setOldItems, fetchItems}) =>{
 
     const handleSubmit = async()=>{
-        let value = document.getElementById('task').value;
-        await axios.post('http://localhost:5000/tasks/addtask',{
-            'text' : value
-        },{
-            headers : {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
-            }
-        });
-        fetchItems();
+        try{
+            let value = document.getElementById('task').value;
+            await axios.post('http://localhost:5000/tasks/addtask',{
+                'text' : value
+            },{
+                headers : {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+            fetchItems();
+        }catch(err){
+            alert(err.response.data.message);
+        }
         document.getElementById('task').value = "";
     }
 
     const handleSearch = async()=>{
-        let value = document.getElementById('task').value.trim();
-        const response = await axios.post('http://localhost:5000/tasks/searchtasks',{
-            'searchText' : value
-        },{
-            headers : {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        try{
+            let value = document.getElementById('task').value.trim();
+            const response = await axios.post('http://localhost:5000/tasks/searchtasks',{
+                'searchText' : value
+            },{
+                headers : {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+            const arr = [];
+            for (let index = 0; index < response.data.result.length; index++) {
+                let task = {id : response.data.result[index]._id, value : response.data.result[index].text, stat:response.data.result[index].todo, update:false};
+                arr.push(task);
             }
-        });
-        const arr = [];
-        for (let index = 0; index < response.data.result.length; index++) {
-            let task = {id : response.data.result[index]._id, value : response.data.result[index].text, stat:response.data.result[index].todo, update:false};
-            arr.push(task);
+            setItems(arr);
+            setOldItems(arr);
+        }catch(err){
+            alert(err.response.data.message);
         }
-        setItems(arr);
-        setOldItems(arr);
     }
 
     const handleRetrieve = ()=>{
