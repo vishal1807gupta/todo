@@ -20,7 +20,7 @@ const App = ()=>{
 
   const handleRemove = async(id)=>{
     try{
-      await axios.delete(`http://localhost:5000/tasks/deletetask/${id}`,
+      await axios.delete(`https://todo-2-v9sp.onrender.com/${id}`,
         {
           headers : {
           "Authorization" : 'Bearer ' + localStorage.getItem('token')
@@ -36,7 +36,7 @@ const App = ()=>{
   
   const handleToggle = async(id)=>{
     try{
-      await axios.patch(`http://localhost:5000/tasks/updatetasksTodo/${id}`,{},
+      await axios.patch(`https://todo-2-v9sp.onrender.com/${id}`,{},
         {
           headers: {
               'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -67,7 +67,7 @@ const App = ()=>{
         p.innerText = input.value;
         input.parentNode.replaceChild(p,input);
         try{
-          await axios.patch(`http://localhost:5000/tasks/updatetasksText/${id}`,{
+          await axios.patch(`https://todo-2-v9sp.onrender.com/${id}`,{
               'text' : input.value
           },
             {
@@ -87,7 +87,7 @@ const App = ()=>{
 
   const fetchItems = async()=>{
     try{
-      const response = await axios.get('http://localhost:5000/tasks/gettasks',
+      const response = await axios.get('https://todo-2-v9sp.onrender.com/tasks/gettasks',
         {
         headers: {
             'Authorization' : 'Bearer ' + localStorage.getItem('token')
