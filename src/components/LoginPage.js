@@ -9,7 +9,7 @@ const LoginPage = ({setIsLoggedIn, setIsRegister, isRegister}) =>{
         let email = document.getElementById('email').value;
         let pass = document.getElementById('pass').value;
         try{
-            const response = await axios.post('http://localhost:5000/users/login',
+            const response = await axios.post('https://todo-2-v9sp.onrender.com/users/login',
                 {
                     email : email,
                     password : pass
@@ -25,7 +25,7 @@ const LoginPage = ({setIsLoggedIn, setIsRegister, isRegister}) =>{
         let email = document.getElementById('email').value;
         let pass = document.getElementById('pass').value;
         try{
-            const response = await axios.post('http://localhost:5000/users/register',
+            const response = await axios.post('https://todo-2-v9sp.onrender.com/users/register',
                 {
                     name : name,
                     email : email,
