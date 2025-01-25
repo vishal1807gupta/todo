@@ -6,7 +6,7 @@ const InputBox = ({setItems, setOldItems, fetchItems}) =>{
     const handleSubmit = async()=>{
         try{
             let value = document.getElementById('task').value;
-            await axios.post('http://localhost:5000/tasks/addtask',{
+            await axios.post('https://todo-2-v9sp.onrender.com/tasks/addtask',{
                 'text' : value
             },{
                 headers : {
@@ -23,7 +23,7 @@ const InputBox = ({setItems, setOldItems, fetchItems}) =>{
     const handleSearch = async()=>{
         try{
             let value = document.getElementById('task').value.trim();
-            const response = await axios.post('http://localhost:5000/tasks/searchtasks',{
+            const response = await axios.post('https://todo-2-v9sp.onrender.com/tasks/searchtasks',{
                 'searchText' : value
             },{
                 headers : {
